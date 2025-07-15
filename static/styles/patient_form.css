@@ -17,6 +17,10 @@
     padding: 3rem;
     animation: fadeInUp 0.8s ease-out;
 }
+.logo a {
+    text-decoration: none;
+    color: inherit;
+}
 
 .form-container h1 {
     color: var(--primary-dark);

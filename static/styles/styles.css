@@ -47,6 +47,10 @@ body {
     letter-spacing: -0.5px;
     animation: fadeIn 1s ease-in-out;
 }
+.logo a {
+    text-decoration: none;
+    color: inherit;
+}
 
 .highlight {
     color: var(--primary-color);
