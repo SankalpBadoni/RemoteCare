@@ -1,0 +1,7 @@
+argparse  # part of standard library, no need to install
+anthropic
+transformers
+groq
+openai
+replicate
+tiktoken

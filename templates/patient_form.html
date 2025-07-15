@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RemoteCare - Patient Information</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/patient_form.css') }}">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <span>Remote<span class="highlight">Care</span></span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="patient-form-section">
+            <div class="form-container">
+                <h1>Patient Information</h1>
+                <p class="form-description">Please enter your details for medical assessment</p>
+                
+                <form action="{{ url_for('set_details') }}" method="POST" class="patient-form">
+                    <div class="form-group">
+                        <label for="patient_name"><i class="fas fa-user"></i> Full Name</label>
+                        <input type="text" id="patient_name" name="patient_name" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label for="age"><i class="fas fa-calendar-alt"></i> Age</label>
+                            <input type="number" id="age" name="age" min="0" max="120" required>
+                        </div>
+                        
+                        <div class="form-group half">
+                            <label for="gender"><i class="fas fa-venus-mars"></i> Gender</label>
+                            <select id="gender" name="gender" required>
+                                <option value="" disabled selected>Select gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="symptoms"><i class="fas fa-notes-medical"></i> Symptoms</label>
+                        <textarea id="symptoms" name="symptoms" rows="4" placeholder="Describe your symptoms in detail..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="exams"><i class="fas fa-stethoscope"></i> Physical Examination Results</label>
+                        <textarea id="exams" name="exams" rows="4" placeholder="Any previous examination results..." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="model_choice"><i class="fas fa-brain"></i> Diagnostic Model</label>
+                        <select id="model_choice" name="model_choice" required>
+                            <option value="" disabled selected>Select model</option>
+                            <option value="claude-3-opus">Claude 3 Opus (Advanced)</option>
+                            <option value="claude-3-sonnet">Claude 3 Sonnet (Standard)</option>
+                            <option value="llama3-70b-8192">Llama3 70B (Research)</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> Submit Information
+                    </button>
+                </form>
+                
+                <div class="form-footer">
+                    <p>Your information is secure and will only be used for diagnostic purposes</p>
+                    <div class="medical-icons">
+                        <i class="fas fa-hospital"></i>
+                        <i class="fas fa-user-md"></i>
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-bottom">
+            <p>&copy; 2025 RemoteCare. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

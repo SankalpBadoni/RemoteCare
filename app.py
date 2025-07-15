@@ -1,7 +1,7 @@
 from flask import Flask , render_template , request , session , jsonify , redirect , url_for
 import os
 from vision_try import DoctorAgent, ManualNEJMScenario, MeasurementAgent
-from pdfextract import PDFExtractor
+
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key' 
@@ -27,7 +27,12 @@ def index():
         session['clear_followup'] = False
         session.modified = True  # inform Flask session was changed
 
+    # The main page is shown, with links to the patient form
     return render_template("index.html")
+
+@app.route('/patient_form')
+def patient_form():
+    return render_template("patient_form.html")
 
 
 
