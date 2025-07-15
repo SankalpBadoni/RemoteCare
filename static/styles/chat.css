@@ -382,3 +382,151 @@ body {
     background: linear-gradient(to right, transparent, rgba(79,70,229,0.05)); /* Maintain gradient */
     border-top: 1px solid rgba(255, 255, 255, 0.2); /* Keep border top */
 }
+
+.upload-container {
+    display: flex;
+    justify-content: center;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(to right, rgba(26, 26, 46, 0.8), rgba(79, 70, 229, 0.1));
+    backdrop-filter: blur(8px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modern-upload-form {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+    gap: 1rem;
+}
+
+.file-input-wrapper {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.file-input-wrapper:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.file-upload-input {
+    position: absolute;
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    z-index: -1;
+}
+
+.file-select-btn {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: rgba(79, 70, 229, 0.6);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    height: 40px;
+}
+
+.file-select-btn:hover {
+    background: rgba(79, 70, 229, 0.8);
+}
+
+.file-icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+}
+
+.file-select-text {
+    font-weight: 500;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.selected-file-name {
+    padding: 0 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 200px;
+}
+
+.submit-pdf-btn {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    height: 40px;
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.8), rgba(67, 56, 202, 0.9));
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.submit-pdf-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(79, 70, 229, 0.4);
+    background: linear-gradient(135deg, rgba(91, 82, 233, 0.9), rgba(79, 70, 229, 1));
+}
+
+.submit-pdf-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+}
+
+.upload-icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+}
+
+/* Animation for the upload button */
+@keyframes pulse-upload {
+    0% {
+        box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+    }
+    50% {
+        box-shadow: 0 4px 15px rgba(79, 70, 229, 0.5);
+    }
+    100% {
+        box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+    }
+}
+
+.submit-pdf-btn {
+    animation: pulse-upload 3s infinite;
+}
+
+.submit-pdf-btn:hover {
+    animation: none;
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+    .modern-upload-form {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .file-input-wrapper, .submit-pdf-btn {
+        width: 100%;
+    }
+    
+    .submit-pdf-btn {
+        justify-content: center;
+    }
+}
