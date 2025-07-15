@@ -1,8 +1,12 @@
-from flask import Flask , render_template , request , session , jsonify , redirect , url_for
+from flask import Flask , render_template , request , session , jsonify , redirect , url_for , send_from_directory , flash
 import os
 from vision_try import DoctorAgent, ManualNEJMScenario, MeasurementAgent
 import uuid
 from dotenv import load_dotenv
+import json
+import pandas as pd
+import re
+from pdfextract import PDFExtractor
 
 
 app = Flask(__name__)
@@ -13,10 +17,10 @@ app.secret_key = 'your_secret_key'
 load_dotenv()
 
 # Access the key
-groq_key = os.getenv("GROQ_API_KEY")
+groq_key = ""
 
 # If a library needs it as an env variable
-os.environ["GROQ_API_KEY"] = groq_key
+os.environ["GROQ_API_KEY"] = ""
  # Required for session use
 
 agents = {}
@@ -31,11 +35,16 @@ def index():
     session.setdefault('followup_input', "")
     session.setdefault('clear_followup', False)
 
+    session['questions'] = 0
+    session['reply'] = ""
+    session['ma_dialogue'] = None
+
     # Handle clear follow-up logic
     if session['clear_followup']:
         session['followup_input'] = ""
         session['clear_followup'] = False
-        session.modified = True  # inform Flask session was changed
+
+    session.modified = True  # inform Flask session was changed
 
     # The main page is shown, with links to the patient form
     return render_template("index.html")
@@ -105,6 +114,44 @@ def set_details():
 def chat():
     return render_template("chat.html")
 
+@app.route('/process_upload', methods=['POST'])
+def process_upload():
+
+    if 'file' not in request.files:
+        flash('No file part')
+        return redirect(url_for('chat'))
+    
+    uploaded_pdf = request.files['file']
+
+    pdf_path = "uploaded_pdf.pdf"
+    with open(pdf_path, "wb") as f:
+        f.write(uploaded_pdf.read())
+
+    if uploaded_pdf.filename == '':
+        flash('No selected file')
+        return redirect(url_for('chat'))
+    
+    extractor = PDFExtractor(groq_api_key=groq_key)
+
+    summary = extractor.extract_and_summarize(pdf_path)
+
+    summary = str(summary)
+
+    session['scenario_dict']["test_results"] += "\n" + summary
+
+    scenario = ManualNEJMScenario(session['scenario_dict'])
+    model_choice = "llama4-scout-groq"
+
+    session_id = session['session_id']
+    agents[session_id]["meas"] = MeasurementAgent(scenario=scenario, backend_str=model_choice)
+
+    reply =  session['reply']
+    ma_dialogue = agents[session_id]["meas"].inference_measurement(reply)
+    session['ma_dialogue'] = ma_dialogue
+
+    return jsonify({"message": ma_dialogue})
+
+
 @app.route("/response")
 def get_bot_response():
     follow_up = request.args.get('msg')
@@ -113,8 +160,22 @@ def get_bot_response():
     # Optional safety check
     if session_id not in agents or "doctor" not in agents[session_id]:
         return jsonify("Doctor agent not found. Please restart the session.")
+    
+    if session['ma_dialogue'] != None:
+        print(session['ma_dialogue'])
+        follow_up = "Test result you asked earlier" + session['ma_dialogue'] + " " + follow_up
+        session['ma_dialogue'] = None
+    
+    if session['questions'] == 1:
+        follow_up = follow_up + "please request a test here .\n" 
 
     response = agents[session_id]["doctor"].inference_doctor(follow_up, image_requested=False)
+    
+    if "REQUEST TEST" in response:
+        session['reply'] = response
+
+    session['questions'] += 1
+
     return jsonify(response)
 
 
@@ -122,6 +183,3 @@ def get_bot_response():
 
 if __name__ == '__main__':
     app.run(debug=True,port= 5500, use_reloader=False)
-
-
-
