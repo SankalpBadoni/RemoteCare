@@ -202,6 +202,33 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    // Navigation links smooth scrolling
+    const navLinks = document.querySelectorAll('.nav-links a, .footer-section ul a');
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            
+            if (targetElement) {
+                // Remove active class from all links
+                navLinks.forEach(navLink => navLink.classList.remove('active'));
+                
+                // Add active class to clicked link (only for main nav)
+                if (this.parentElement.parentElement.classList.contains('nav-links')) {
+                    this.classList.add('active');
+                }
+                
+                // Scroll to the target section
+                targetElement.scrollIntoView({ 
+                    behavior: 'smooth' 
+                });
+            }
+        });
+    });
+    
     // Animate navbar on scroll
     window.addEventListener('scroll', function() {
         const navbar = document.querySelector('.navbar');
@@ -212,6 +239,22 @@ document.addEventListener('DOMContentLoaded', function() {
             navbar.style.padding = '1rem 5%';
             navbar.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.05)';
         }
+        
+        // Update active nav link based on scroll position
+        const sections = document.querySelectorAll('section[id]');
+        let scrollPosition = window.scrollY + 100;
+        
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.offsetHeight;
+            const sectionId = section.getAttribute('id');
+            
+            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                document.querySelector('.nav-links a[href="#' + sectionId + '"]').classList.add('active');
+            } else {
+                document.querySelector('.nav-links a[href="#' + sectionId + '"]').classList.remove('active');
+            }
+        });
     });
     
     // Book appointment button effect
@@ -226,9 +269,50 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    // Contact form submission
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            
+            // Simple validation
+            if (!name || !email || !message) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
+            // Simulate form submission
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.textContent = 'Sending...';
+            submitBtn.disabled = true;
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                // Reset form
+                contactForm.reset();
+                
+                // Show success message
+                submitBtn.textContent = 'Message Sent!';
+                submitBtn.style.backgroundColor = '#059669'; // Green-600
+                
+                setTimeout(() => {
+                    submitBtn.textContent = 'Send Message';
+                    submitBtn.style.backgroundColor = '';
+                    submitBtn.disabled = false;
+                }, 2000);
+            }, 1500);
+        });
+    }
+    
     // Add animation to navigation links
-    const navLinks = document.querySelectorAll('.nav-links a');
-    navLinks.forEach((link, index) => {
+    const headerNavLinks = document.querySelectorAll('.nav-links a');
+    headerNavLinks.forEach((link, index) => {
         link.style.animationDelay = `${index * 0.1}s`;
         link.style.animation = 'fadeIn 0.5s ease-in-out forwards';
     });
