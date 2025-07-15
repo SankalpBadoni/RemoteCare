@@ -5,6 +5,26 @@ const msgerChat = document.querySelector(".chat-area");
 const BOT_NAME = "🩺 RemoteCare";
 const PERSON_NAME = "👤 You";
 
+
+document.getElementById("pdfUploadForm").addEventListener("submit", function(e) {
+e.preventDefault(); // prevent full page reload
+
+const formData = new FormData(this);
+
+fetch("/process_upload", {
+    method: "POST",
+    body: formData
+})
+.then(response => response.json())
+.then(data => {
+    appendMessage("📄 System", "left", data.message || "Upload complete.");
+})
+.catch(error => {
+    console.error("Upload failed:", error);
+    appendMessage("📄 System", "left", "Upload failed. Please try again.");
+});
+});
+
 msgerForm.addEventListener("submit", event => {
     event.preventDefault();
 
