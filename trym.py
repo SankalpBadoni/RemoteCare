@@ -170,7 +170,7 @@ else:
                 f.write(uploaded_pdf.read())
 
             st.session_state.pdf_path = pdf_path
-            groq_key = "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"
+            groq_key = ""
 
             extractor = PDFExtractor(groq_api_key=groq_key)
             summary = extractor.extract_and_summarize(pdf_path)

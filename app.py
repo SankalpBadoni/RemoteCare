@@ -1,15 +1,25 @@
 from flask import Flask , render_template , request , session , jsonify , redirect , url_for
 import os
 from vision_try import DoctorAgent, ManualNEJMScenario, MeasurementAgent
+import uuid
+from dotenv import load_dotenv
 
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key' 
 
 
-# --- API Key ---
-os.environ["GROQ_API_KEY"] = "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"
+# Load .env file
+load_dotenv()
+
+# Access the key
+groq_key = os.getenv("GROQ_API_KEY")
+
+# If a library needs it as an env variable
+os.environ["GROQ_API_KEY"] = groq_key
  # Required for session use
+
+agents = {}
 
 @app.route('/')
 def index():
@@ -43,7 +53,7 @@ def set_details():
     gender = request.form['gender']
     symptoms = request.form['symptoms']
     exams = request.form['exams']
-    model_choice = request.form['model_choice']
+    model_choice = "llama4-scout-groq"
 
     # Store in session
     session['patient_name'] = patient_name
@@ -64,8 +74,7 @@ def set_details():
     "patient_info": f"{patient_name} is a {age}-year-old {gender}. Symptoms: {symptoms}",
     "physical_exams": exams,
     "answers": [{"text": "Diagnosis not yet provided", "correct": True}],
-    "test_results" : ""
-}
+    "test_results" : "" }
      
     scenario = ManualNEJMScenario(scenario_dict)
     doctor_agent = DoctorAgent(scenario=scenario, backend_str=model_choice, max_infs=20, img_request=True)
@@ -73,12 +82,15 @@ def set_details():
         scenario=scenario,
         backend_str=model_choice)
     
-    session['doctor_agent'] = doctor_agent
-    session['meas_agent'] = meas_agent
+    session_id = session.get('session_id', str(uuid.uuid4()))
+    session['session_id'] = session_id
+    agents[session_id] = {
+        "doctor": doctor_agent,
+        "meas": meas_agent
+    }
 
 
     session['scenario_dict'] = scenario_dict  # must be a JSON-serializable dict
-    session['scenario'] = scenario
     session['reply'] = ""
     session['m_reply'] = None
 
@@ -88,6 +100,24 @@ def set_details():
     session['conversation'].append({"role": "patient", "content": symptoms})
 
     return redirect(url_for('chat'))
+
+@app.route("/chat")
+def chat():
+    return render_template("chat.html")
+
+@app.route("/response")
+def get_bot_response():
+    follow_up = request.args.get('msg')
+    session_id = session['session_id']
+    
+    # Optional safety check
+    if session_id not in agents or "doctor" not in agents[session_id]:
+        return jsonify("Doctor agent not found. Please restart the session.")
+
+    response = agents[session_id]["doctor"].inference_doctor(follow_up, image_requested=False)
+    return jsonify(response)
+
+
 
 
 if __name__ == '__main__':

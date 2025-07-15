@@ -155,7 +155,7 @@ else:
 
             # Store image path
             st.session_state.pdf_path = pdf_path
-            groq_key = "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"
+            groq_key = ""
             # Initialize the extractor
             extractor = PDFExtractor(groq_api_key=groq_key)
 
