@@ -586,3 +586,210 @@ body {
         justify-content: center;
     }
 }
+
+/* Chat Popup Styles */
+.chat-popup {
+    position: fixed;
+    width: 350px;
+    height: 450px;
+    right: 20px;
+    bottom: 20px;
+    background-color: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    overflow: hidden;
+    display: none;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: scale(0.95);
+    opacity: 0;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.chat-popup.active {
+    display: flex;
+    transform: scale(1);
+    opacity: 1;
+}
+
+.chat-header {
+    background: linear-gradient(to right, var(--primary), var(--primary-light));
+    color: var(--white);
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    cursor: move;
+}
+
+.chat-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 600;
+}
+
+.chat-avatar {
+    background-color: rgba(255, 255, 255, 0.2);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+}
+
+.chat-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.chat-control-btn {
+    background: none;
+    border: none;
+    color: var(--white);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.chat-control-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.chat-body {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.chat-messages {
+    flex-grow: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.message {
+    max-width: 80%;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    position: relative;
+    word-break: break-word;
+}
+
+.message-content {
+    font-size: 0.9375rem;
+}
+
+.message-time {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    margin-top: 0.25rem;
+    text-align: right;
+}
+
+.user-message {
+    align-self: flex-end;
+    background-color: var(--primary);
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.patient-message {
+    align-self: flex-start;
+    background-color: #f0f0f0;
+    color: var(--text-primary);
+    border-bottom-left-radius: 4px;
+}
+
+.system-message {
+    align-self: center;
+    background-color: rgba(0, 0, 0, 0.05);
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    width: fit-content;
+    max-width: 90%;
+}
+
+.chat-input-area {
+    display: flex;
+    padding: 1rem;
+    background-color: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+}
+
+.chat-input-area input {
+    flex-grow: 1;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background-color: var(--white);
+    transition: all 0.2s ease;
+}
+
+.chat-input-area input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+.chat-input-area button {
+    margin-left: 0.5rem;
+    width: 40px;
+    height: 40px;
+    background-color: var(--primary);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.chat-input-area button:hover {
+    background-color: var(--primary-dark);
+}
+
+.chat-input-area button:active {
+    transform: scale(0.95);
+}
+
+/* Minimized chat state */
+.chat-popup.minimized {
+    height: 50px;
+    width: 250px;
+}
+
+.chat-popup.minimized .chat-body {
+    display: none;
+}
+
+/* Responsive Chat Popup */
+@media (max-width: 480px) {
+    .chat-popup {
+        width: 300px;
+        height: 400px;
+        right: 10px;
+        bottom: 10px;
+        left: auto;
+        top: auto;
+    }
+}

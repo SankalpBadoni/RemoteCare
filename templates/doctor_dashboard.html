@@ -171,6 +171,40 @@
         </div>
     </main>
 
+    <!-- Chat Popup -->
+    <div id="chat-popup" class="chat-popup">
+        <div class="chat-header">
+            <div class="chat-title">
+                <i class="fas fa-user-injured chat-avatar"></i>
+                <span id="chat-patient-name">Patient Name</span>
+            </div>
+            <div class="chat-controls">
+                <button id="minimize-chat" class="chat-control-btn">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button id="close-chat" class="chat-control-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="chat-body">
+            <div class="chat-messages" id="chat-messages">
+                <div class="message system-message">
+                    <div class="message-content">
+                        Connected with patient. You can now start the conversation.
+                    </div>
+                    <div class="message-time">Just now</div>
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Type your message..." />
+                <button id="send-message">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <footer>
         <div class="footer-content">
             <div class="footer-section">

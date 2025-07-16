@@ -254,6 +254,10 @@ function hidePatientModal() {
     document.body.style.overflow = '';
 }
 
+// Chat popup functionality
+let isDragging = false;
+let offsetX, offsetY;
+
 // Connect with a patient
 function connectWithPatient(patientId) {
     const patients = getPatients();
@@ -264,10 +268,255 @@ function connectWithPatient(patientId) {
         return;
     }
     
-    // For now, redirect to chat page
-    // In a real app, you might want to store the current patient ID in localStorage
-    localStorage.setItem('currentPatientId', patientId);
-    window.location.href = '/chat';
+    // Hide modal if it's open
+    hidePatientModal();
+    
+    // Open chat popup instead of redirecting
+    openChatPopup(patient.name);
+}
+
+// Open chat popup
+function openChatPopup(patientName) {
+    const popup = document.getElementById('chat-popup');
+    const chatPatientName = document.getElementById('chat-patient-name');
+    
+    // Set patient name
+    chatPatientName.textContent = patientName;
+    
+    // Position the popup randomly within the main content area
+    positionChatPopupRandomly();
+    
+    // Show popup with animation
+    popup.classList.add('active');
+    
+    // Setup drag functionality
+    setupChatDrag();
+    
+    // Set up event listeners for chat controls
+    document.getElementById('minimize-chat').addEventListener('click', minimizeChat);
+    document.getElementById('close-chat').addEventListener('click', closeChat);
+    document.getElementById('send-message').addEventListener('click', sendChatMessage);
+    
+    // Add keyboard event listener for message input
+    const chatInput = document.getElementById('chat-input');
+    chatInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            sendChatMessage();
+        }
+    });
+    
+    // Focus on input
+    chatInput.focus();
+}
+
+// Position chat popup in the lower right corner
+function positionChatPopupRandomly() {
+    const popup = document.getElementById('chat-popup');
+    
+    // Get viewport dimensions
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    
+    // Calculate position for lower right corner with some padding
+    const padding = 20;
+    const posX = viewportWidth - popup.offsetWidth - padding;
+    const posY = viewportHeight - popup.offsetHeight - padding;
+    
+    // Set position
+    popup.style.right = padding + 'px';
+    popup.style.bottom = padding + 'px';
+    popup.style.left = 'auto';
+    popup.style.top = 'auto';
+}
+
+// Setup drag functionality for chat popup
+function setupChatDrag() {
+    const popup = document.getElementById('chat-popup');
+    const header = popup.querySelector('.chat-header');
+    
+    header.addEventListener('mousedown', startDrag);
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('mouseup', endDrag);
+    
+    // Touch events for mobile devices
+    header.addEventListener('touchstart', startDragTouch);
+    document.addEventListener('touchmove', dragTouch);
+    document.addEventListener('touchend', endDrag);
+}
+
+// Start dragging the chat popup
+function startDrag(e) {
+    const popup = document.getElementById('chat-popup');
+    
+    isDragging = true;
+    offsetX = e.clientX - popup.getBoundingClientRect().left;
+    offsetY = e.clientY - popup.getBoundingClientRect().top;
+    
+    popup.style.cursor = 'grabbing';
+}
+
+// Start dragging with touch
+function startDragTouch(e) {
+    const popup = document.getElementById('chat-popup');
+    
+    isDragging = true;
+    offsetX = e.touches[0].clientX - popup.getBoundingClientRect().left;
+    offsetY = e.touches[0].clientY - popup.getBoundingClientRect().top;
+}
+
+// Drag the chat popup
+function drag(e) {
+    if (!isDragging) return;
+    
+    const popup = document.getElementById('chat-popup');
+    
+    // Calculate new position
+    let newX = e.clientX - offsetX;
+    let newY = e.clientY - offsetY;
+    
+    // Set bounds
+    const maxX = window.innerWidth - popup.offsetWidth;
+    const maxY = window.innerHeight - popup.offsetHeight;
+    
+    newX = Math.max(0, Math.min(newX, maxX));
+    newY = Math.max(0, Math.min(newY, maxY));
+    
+    // Apply new position
+    popup.style.left = newX + 'px';
+    popup.style.top = newY + 'px';
+    
+    // Prevent default events
+    e.preventDefault();
+}
+
+// Drag with touch
+function dragTouch(e) {
+    if (!isDragging) return;
+    
+    const popup = document.getElementById('chat-popup');
+    
+    // Calculate new position
+    let newX = e.touches[0].clientX - offsetX;
+    let newY = e.touches[0].clientY - offsetY;
+    
+    // Set bounds
+    const maxX = window.innerWidth - popup.offsetWidth;
+    const maxY = window.innerHeight - popup.offsetHeight;
+    
+    newX = Math.max(0, Math.min(newX, maxX));
+    newY = Math.max(0, Math.min(newY, maxY));
+    
+    // Apply new position
+    popup.style.left = newX + 'px';
+    popup.style.top = newY + 'px';
+    
+    // Prevent default events
+    e.preventDefault();
+}
+
+// End dragging
+function endDrag() {
+    const popup = document.getElementById('chat-popup');
+    
+    isDragging = false;
+    popup.style.cursor = '';
+}
+
+// Minimize chat popup
+function minimizeChat() {
+    const popup = document.getElementById('chat-popup');
+    
+    popup.classList.toggle('minimized');
+    
+    // Change icon based on state
+    const icon = document.getElementById('minimize-chat').querySelector('i');
+    if (popup.classList.contains('minimized')) {
+        icon.classList.remove('fa-minus');
+        icon.classList.add('fa-expand');
+    } else {
+        icon.classList.remove('fa-expand');
+        icon.classList.add('fa-minus');
+    }
+}
+
+// Close chat popup
+function closeChat() {
+    const popup = document.getElementById('chat-popup');
+    
+    // Hide popup with animation
+    popup.classList.remove('active');
+    
+    // Reset minimized state
+    popup.classList.remove('minimized');
+    
+    // Reset chat messages
+    document.getElementById('chat-messages').innerHTML = `
+        <div class="message system-message">
+            <div class="message-content">
+                Connected with patient. You can now start the conversation.
+            </div>
+            <div class="message-time">Just now</div>
+        </div>
+    `;
+    
+    // Clear input
+    document.getElementById('chat-input').value = '';
+}
+
+// Send chat message
+function sendChatMessage() {
+    const chatInput = document.getElementById('chat-input');
+    const message = chatInput.value.trim();
+    
+    if (!message) return;
+    
+    // Add message to chat
+    addChatMessage(message, 'user');
+    
+    // Clear input
+    chatInput.value = '';
+    chatInput.focus();
+    
+    // Simulate patient response after a delay
+    setTimeout(() => {
+        const responses = [
+            "Thank you, doctor. I'll follow your advice.",
+            "When should I take the medication?",
+            "Is there anything specific I should avoid?",
+            "I've been feeling better since our last session.",
+            "The symptoms have subsided a bit.",
+            "Should I schedule another appointment?",
+            "I appreciate your help, doctor."
+        ];
+        
+        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+        addChatMessage(randomResponse, 'patient');
+    }, 1500);
+}
+
+// Add message to chat
+function addChatMessage(message, sender) {
+    const chatMessages = document.getElementById('chat-messages');
+    const messageDiv = document.createElement('div');
+    
+    // Get current time
+    const now = new Date();
+    const timeString = now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+    
+    // Set class based on sender
+    messageDiv.className = `message ${sender}-message`;
+    
+    // Set message content
+    messageDiv.innerHTML = `
+        <div class="message-content">${message}</div>
+        <div class="message-time">${timeString}</div>
+    `;
+    
+    // Add to chat
+    chatMessages.appendChild(messageDiv);
+    
+    // Scroll to bottom
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
 // Generate demo patients if none exist
