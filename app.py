@@ -178,7 +178,9 @@ def get_bot_response():
 
     return jsonify(response)
 
-
+@app.route('/doctor_dashboard')
+def doctor_dashboard():
+    return render_template("doctor_dashboard.html")
 
 
 if __name__ == '__main__':
