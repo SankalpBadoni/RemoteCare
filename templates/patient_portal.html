@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RemoteCare - Patient Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/patient_portal.css') }}">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <span><a href="{{ url_for('index') }}">Remote<span class="highlight">Care</span></a></span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="#dashboard" class="active">Dashboard</a></li>
+                <li><a href="#diagnoses">Diagnoses</a></li>
+                <li><a href="#chats">Chat History</a></li>
+            </ul>
+            <div class="patient-profile">
+                <span class="patient-name" id="patient-name">John Smith</span>
+                <div class="patient-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="portal-header">
+            <div class="portal-container">
+                <h1>Patient Portal</h1>
+                <div class="portal-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-stethoscope"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Diagnoses</h3>
+                            <p id="total-diagnoses">5</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Upcoming Appointments</h3>
+                            <p id="upcoming-appointments">2</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Unread Messages</h3>
+                            <p id="unread-messages">3</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-medical"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Medical Records</h3>
+                            <p id="medical-records">8</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="dashboard" class="dashboard-section">
+            <div class="section-container">
+                <div class="section-header">
+                    <h2>Your Health Overview</h2>
+                    <div class="date-display" id="current-date">July 16, 2025</div>
+                </div>
+                
+                <div class="health-overview">
+                    <div class="health-card primary-card">
+                        <div class="card-header">
+                            <h3>Recent Diagnosis</h3>
+                            <i class="fas fa-file-medical"></i>
+                        </div>
+                        <div class="card-body">
+                            <h4 id="latest-diagnosis-title">Hypertension Assessment</h4>
+                            <p id="latest-diagnosis-date">Diagnosed on: July 10, 2025</p>
+                            <p id="latest-diagnosis-doctor">By: Dr. Smith</p>
+                            <p id="latest-diagnosis-summary">Patient shows symptoms of hypertension. BP consistently above 140/90. Recommended lifestyle changes and scheduled a follow-up in 2 weeks.</p>
+                            <button class="view-details-btn">View Full Details</button>
+                        </div>
+                    </div>
+                    
+                    <div class="health-grid">
+                        <div class="health-card">
+                            <div class="card-header">
+                                <h3>Upcoming Appointment</h3>
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div class="card-body">
+                                <div class="appointment-item">
+                                    <div class="appointment-date">
+                                        <span class="day">24</span>
+                                        <span class="month">Jul</span>
+                                    </div>
+                                    <div class="appointment-details">
+                                        <h4>Blood Pressure Follow-up</h4>
+                                        <p>Dr. Smith - Cardiology</p>
+                                        <p>10:30 AM - Virtual Consultation</p>
+                                    </div>
+                                </div>
+                                <button class="secondary-btn">View All Appointments</button>
+                            </div>
+                        </div>
+                        
+                        <div class="health-card">
+                            <div class="card-header">
+                                <h3>Medications</h3>
+                                <i class="fas fa-pills"></i>
+                            </div>
+                            <div class="card-body">
+                                <ul class="medication-list">
+                                    <li>
+                                        <div class="med-name">Lisinopril</div>
+                                        <div class="med-dose">10mg - Once daily</div>
+                                    </li>
+                                    <li>
+                                        <div class="med-name">Aspirin</div>
+                                        <div class="med-dose">81mg - Once daily</div>
+                                    </li>
+                                    <li>
+                                        <div class="med-name">Atorvastatin</div>
+                                        <div class="med-dose">20mg - Once daily at bedtime</div>
+                                    </li>
+                                </ul>
+                                <button class="secondary-btn">Medication Details</button>
+                            </div>
+                        </div>
+                        
+                        <div class="health-card">
+                            <div class="card-header">
+                                <h3>Recent Activity</h3>
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="card-body">
+                                <div class="activity-timeline">
+                                    <div class="timeline-item">
+                                        <div class="timeline-icon"><i class="fas fa-comments"></i></div>
+                                        <div class="timeline-content">
+                                            <p>Chat session with Dr. Smith</p>
+                                            <span>Today, 9:30 AM</span>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item">
+                                        <div class="timeline-icon"><i class="fas fa-flask"></i></div>
+                                        <div class="timeline-content">
+                                            <p>Blood work results received</p>
+                                            <span>Jul 14, 2025</span>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item">
+                                        <div class="timeline-icon"><i class="fas fa-heartbeat"></i></div>
+                                        <div class="timeline-content">
+                                            <p>BP reading: 138/88</p>
+                                            <span>Jul 12, 2025</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="secondary-btn">View All Activity</button>
+                            </div>
+                        </div>
+                        
+                        <div class="health-card">
+                            <div class="card-header">
+                                <h3>Health Metrics</h3>
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <div class="card-body">
+                                <div class="metric-item">
+                                    <div class="metric-label">Blood Pressure</div>
+                                    <div class="metric-progress">
+                                        <div class="progress-bar" style="width: 75%;"></div>
+                                    </div>
+                                    <div class="metric-value">138/88</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">Cholesterol</div>
+                                    <div class="metric-progress">
+                                        <div class="progress-bar" style="width: 60%;"></div>
+                                    </div>
+                                    <div class="metric-value">195 mg/dL</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">Blood Sugar</div>
+                                    <div class="metric-progress">
+                                        <div class="progress-bar" style="width: 40%;"></div>
+                                    </div>
+                                    <div class="metric-value">110 mg/dL</div>
+                                </div>
+                                <button class="secondary-btn">View Health Trends</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="diagnoses" class="diagnoses-section">
+            <div class="section-container">
+                <div class="section-header">
+                    <h2>Diagnosis History</h2>
+                    <div class="action-buttons">
+                        <div class="search-wrapper">
+                            <input type="text" id="diagnosis-search" placeholder="Search diagnoses...">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <button class="filter-btn">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="diagnoses-grid" id="diagnoses-container">
+                    <!-- Diagnosis cards -->
+                    <div class="diagnosis-card">
+                        <div class="diagnosis-header">
+                            <h3>Hypertension Assessment</h3>
+                            <span class="diagnosis-date">July 10, 2025</span>
+                        </div>
+                        <div class="diagnosis-body">
+                            <div class="diagnosis-doctor">
+                                <i class="fas fa-user-md"></i>
+                                <span>Dr. Smith</span>
+                            </div>
+                            <p class="diagnosis-summary">Patient shows symptoms of hypertension. BP consistently above 140/90. Recommended lifestyle changes and scheduled a follow-up in 2 weeks.</p>
+                        </div>
+                        <div class="diagnosis-footer">
+                            <button class="view-btn"><i class="fas fa-eye"></i> View Details</button>
+                            <button class="share-btn"><i class="fas fa-share-alt"></i> Share</button>
+                        </div>
+                    </div>
+                    
+                    <div class="diagnosis-card">
+                        <div class="diagnosis-header">
+                            <h3>Annual Physical Examination</h3>
+                            <span class="diagnosis-date">May 15, 2025</span>
+                        </div>
+                        <div class="diagnosis-body">
+                            <div class="diagnosis-doctor">
+                                <i class="fas fa-user-md"></i>
+                                <span>Dr. Johnson</span>
+                            </div>
+                            <p class="diagnosis-summary">Overall health is good. Minor concerns about cholesterol levels (195 mg/dL). Recommended dietary changes and increased physical activity.</p>
+                        </div>
+                        <div class="diagnosis-footer">
+                            <button class="view-btn"><i class="fas fa-eye"></i> View Details</button>
+                            <button class="share-btn"><i class="fas fa-share-alt"></i> Share</button>
+                        </div>
+                    </div>
+                    
+                    <div class="diagnosis-card">
+                        <div class="diagnosis-header">
+                            <h3>Lower Back Pain Evaluation</h3>
+                            <span class="diagnosis-date">March 22, 2025</span>
+                        </div>
+                        <div class="diagnosis-body">
+                            <div class="diagnosis-doctor">
+                                <i class="fas fa-user-md"></i>
+                                <span>Dr. Martinez</span>
+                            </div>
+                            <p class="diagnosis-summary">Muscle strain in the lumbar region. No indication of disc issues. Prescribed muscle relaxants and physical therapy sessions twice weekly for 3 weeks.</p>
+                        </div>
+                        <div class="diagnosis-footer">
+                            <button class="view-btn"><i class="fas fa-eye"></i> View Details</button>
+                            <button class="share-btn"><i class="fas fa-share-alt"></i> Share</button>
+                        </div>
+                    </div>
+                    
+                    <div class="diagnosis-card">
+                        <div class="diagnosis-header">
+                            <h3>Respiratory Infection</h3>
+                            <span class="diagnosis-date">January 8, 2025</span>
+                        </div>
+                        <div class="diagnosis-body">
+                            <div class="diagnosis-doctor">
+                                <i class="fas fa-user-md"></i>
+                                <span>Dr. Wilson</span>
+                            </div>
+                            <p class="diagnosis-summary">Upper respiratory infection with symptoms of cough, congestion, and mild fever. Likely viral in nature. Recommended rest, fluids, and over-the-counter symptom relief.</p>
+                        </div>
+                        <div class="diagnosis-footer">
+                            <button class="view-btn"><i class="fas fa-eye"></i> View Details</button>
+                            <button class="share-btn"><i class="fas fa-share-alt"></i> Share</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="chats" class="chats-section">
+            <div class="section-container">
+                <div class="section-header">
+                    <h2>Chat History</h2>
+                    <div class="action-buttons">
+                        <div class="search-wrapper">
+                            <input type="text" id="chat-search" placeholder="Search conversations...">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <button class="filter-btn">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="chat-history-container">
+                    <div class="chat-list">
+                        <div class="chat-item active">
+                            <div class="chat-avatar">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <div class="chat-info">
+                                <div class="chat-name">Dr. Smith</div>
+                                <div class="chat-preview">Thank you for sharing your symptoms...</div>
+                            </div>
+                            <div class="chat-meta">
+                                <div class="chat-time">Today</div>
+                                <div class="chat-status unread">3</div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-item">
+                            <div class="chat-avatar">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <div class="chat-info">
+                                <div class="chat-name">Dr. Johnson</div>
+                                <div class="chat-preview">Your lab results look much better...</div>
+                            </div>
+                            <div class="chat-meta">
+                                <div class="chat-time">Yesterday</div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-item">
+                            <div class="chat-avatar">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <div class="chat-info">
+                                <div class="chat-name">Dr. Martinez</div>
+                                <div class="chat-preview">How is your back pain now?</div>
+                            </div>
+                            <div class="chat-meta">
+                                <div class="chat-time">Jul 12</div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-item">
+                            <div class="chat-avatar">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <div class="chat-info">
+                                <div class="chat-name">Dr. Wilson</div>
+                                <div class="chat-preview">Is the cough any better with...</div>
+                            </div>
+                            <div class="chat-meta">
+                                <div class="chat-time">Jun 28</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-messages">
+                        <div class="chat-header">
+                            <div class="chat-contact">
+                                <div class="chat-avatar">
+                                    <i class="fas fa-user-md"></i>
+                                </div>
+                                <div class="chat-name">Dr. Smith</div>
+                            </div>
+                            <div class="chat-actions">
+                                <button class="chat-action-btn">
+                                    <i class="fas fa-phone"></i>
+                                </button>
+                                <button class="chat-action-btn">
+                                    <i class="fas fa-video"></i>
+                                </button>
+                                <button class="chat-action-btn">
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="messages-container">
+                            <div class="chat-date-divider">
+                                <span>Today</span>
+                            </div>
+                            
+                            <div class="message doctor-message">
+                                <div class="message-content">
+                                    Good morning! How are you feeling today? Have you been monitoring your blood pressure as we discussed?
+                                </div>
+                                <div class="message-time">9:00 AM</div>
+                            </div>
+                            
+                            <div class="message patient-message">
+                                <div class="message-content">
+                                    Good morning, Dr. Smith. Yes, I've been taking readings twice daily. My morning average is around 138/88 and evening is about 135/85.
+                                </div>
+                                <div class="message-time">9:05 AM</div>
+                            </div>
+                            
+                            <div class="message doctor-message">
+                                <div class="message-content">
+                                    That's better than last week, which is good progress. Have you been following the DASH diet plan I sent you?
+                                </div>
+                                <div class="message-time">9:08 AM</div>
+                            </div>
+                            
+                            <div class="message patient-message">
+                                <div class="message-content">
+                                    Yes, I've cut down on sodium and processed foods. I'm also walking for 30 minutes every morning.
+                                </div>
+                                <div class="message-time">9:12 AM</div>
+                            </div>
+                            
+                            <div class="message doctor-message">
+                                <div class="message-content">
+                                    Excellent! The lifestyle changes are clearly helping. I'd like you to continue with this regimen. Let's also discuss your medication dosage during our appointment next week.
+                                </div>
+                                <div class="message-time">9:15 AM</div>
+                            </div>
+                            
+                            <div class="message doctor-message">
+                                <div class="message-content">
+                                    Also, please bring your blood pressure log with you to the appointment. Thank you for sharing your symptoms and progress so diligently.
+                                </div>
+                                <div class="message-time">9:16 AM</div>
+                            </div>
+                            
+                            <div class="message patient-message">
+                                <div class="message-content">
+                                    Will do, doctor. Thank you for your guidance and support.
+                                </div>
+                                <div class="message-time">9:30 AM</div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-input">
+                            <button class="attachment-btn">
+                                <i class="fas fa-paperclip"></i>
+                            </button>
+                            <input type="text" placeholder="Type a message...">
+                            <button class="send-btn">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>RemoteCare</h3>
+                <p>Advanced healthcare platform for patients and doctors.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="#dashboard">Dashboard</a></li>
+                    <li><a href="#diagnoses">Diagnoses</a></li>
+                    <li><a href="#chats">Chat History</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p>Email: support@remotecare.com</p>
+                <p>Phone: +1 (555) 123-4567</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 RemoteCare. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/patient_portal.js') }}"></script>
+</body>
+</html>

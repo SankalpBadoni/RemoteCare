@@ -182,6 +182,10 @@ def get_bot_response():
 def doctor_dashboard():
     return render_template("doctor_dashboard.html")
 
+@app.route('/patient_portal')
+def patient_portal():
+    return render_template("patient_portal.html")
+
 
 if __name__ == '__main__':
     app.run(debug=True,port= 5500, use_reloader=False)
