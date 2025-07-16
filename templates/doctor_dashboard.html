@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RemoteCare - Doctor Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/doctor_dashboard.css') }}">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <span><a href="{{ url_for('index') }}">Remote<span class="highlight">Care</span></a></span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="#patients" class="active">Patients</a></li>
+                <li><a href="#appointments">Appointments</a></li>
+                <li><a href="#reports">Reports</a></li>
+            </ul>
+            <div class="doctor-profile">
+                <span class="doctor-name">Dr. <span id="doctor-name">Smith</span></span>
+                <div class="doctor-avatar">
+                    <i class="fas fa-user-md"></i>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="dashboard-header">
+            <div class="dashboard-container">
+                <h1>Doctor Dashboard</h1>
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-injured"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Total Patients</h3>
+                            <p id="total-patients">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Today's Appointments</h3>
+                            <p id="today-appointments">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-medical-alt"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Pending Reports</h3>
+                            <p id="pending-reports">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>New Messages</h3>
+                            <p id="new-messages">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="patients" class="patients-section">
+            <div class="section-container">
+                <div class="section-header">
+                    <h2>Your Patients</h2>
+                    <div class="action-buttons">
+                        <div class="search-wrapper">
+                            <input type="text" id="patient-search" placeholder="Search patients...">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <button class="filter-btn">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                        <button class="refresh-btn" onclick="loadPatients()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="patients-grid" id="patients-container">
+                    <!-- Patient cards will be dynamically populated here -->
+                </div>
+                
+                <!-- Empty state for when no patients are available -->
+                <div id="no-patients" class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fas fa-user-injured"></i>
+                    </div>
+                    <h3>No Patients Found</h3>
+                    <p>There are no patients in your care at the moment.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Patient Detail Modal -->
+        <div id="patient-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Patient Details</h2>
+                    <span class="close-modal">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="patient-profile">
+                        <div class="patient-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="patient-info">
+                            <h3 id="modal-patient-name">Patient Name</h3>
+                            <p>ID: <span id="modal-patient-id">P12345</span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h4>Personal Information</h4>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Age</span>
+                                <span id="modal-patient-age" class="info-value">45</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Gender</span>
+                                <span id="modal-patient-gender" class="info-value">Male</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Phone</span>
+                                <span id="modal-patient-phone" class="info-value">+1 (555) 123-4567</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Email</span>
+                                <span id="modal-patient-email" class="info-value">patient@example.com</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h4>Diagnosis Summary</h4>
+                        <div class="diagnosis-content">
+                            <p id="modal-diagnosis-summary">No diagnosis information available.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button id="connect-patient-btn" class="primary-btn">
+                            <i class="fas fa-comment-medical"></i> Connect with Patient
+                        </button>
+                        <button class="secondary-btn">
+                            <i class="fas fa-file-medical"></i> View Medical Records
+                        </button>
+                        <button class="secondary-btn">
+                            <i class="fas fa-notes-medical"></i> Add Notes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>RemoteCare</h3>
+                <p>Advanced healthcare platform for doctors and patients.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="#patients">Patients</a></li>
+                    <li><a href="#appointments">Appointments</a></li>
+                    <li><a href="#reports">Reports</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p>Email: support@remotecare.com</p>
+                <p>Phone: +1 (555) 123-4567</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 RemoteCare. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/doctor_dashboard.js') }}"></script>
+</body>
+</html>
